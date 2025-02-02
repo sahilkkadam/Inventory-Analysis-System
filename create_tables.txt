@@ -1,0 +1,88 @@
+-- Drop tables if they exist
+DROP TABLE IF EXISTS OrderItem;
+DROP TABLE IF EXISTS Orders;
+DROP TABLE IF EXISTS Product;
+DROP TABLE IF EXISTS Customer;
+DROP TABLE IF EXISTS Supplier;
+
+-- Create tables
+CREATE TABLE Customer (
+  Id INT ,
+  FirstName VARCHAR(40) NOT NULL,
+  LastName VARCHAR(40) NOT NULL,
+  City VARCHAR(40) NULL,
+  Country VARCHAR(40) NULL,
+  Phone VARCHAR(20) NULL,
+  PRIMARY KEY (Id)
+);
+
+CREATE INDEX IndexCustomerName ON Customer (LastName ASC, FirstName ASC);
+
+CREATE TABLE Orders (
+  Id INT ,
+  OrderDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  OrderNumber VARCHAR(10) NULL,
+  CustomerId INT NOT NULL,
+  TotalAmount DECIMAL(12,2) NULL DEFAULT 0,
+  PRIMARY KEY (Id)
+);
+
+CREATE INDEX IndexOrderCustomerId ON Orders (CustomerId ASC);
+CREATE INDEX IndexOrderOrderDate ON Orders (OrderDate ASC);
+
+CREATE TABLE OrderItem (
+  Id INT ,
+  OrderId INT NOT NULL,
+  ProductId INT NOT NULL,
+  UnitPrice DECIMAL(12,2) NOT NULL DEFAULT 0,
+  Quantity INT NOT NULL DEFAULT 1,
+  PRIMARY KEY (Id)
+);
+
+CREATE INDEX IndexOrderItemOrderId ON OrderItem (OrderId ASC);
+CREATE INDEX IndexOrderItemProductId ON OrderItem (ProductId ASC);
+
+CREATE TABLE Product (
+  Id INT ,
+  ProductName VARCHAR(50) NOT NULL,
+  SupplierId INT NOT NULL,
+  UnitPrice DECIMAL(12,2) NULL DEFAULT 0,
+  Package VARCHAR(30) NULL,
+  IsDiscontinued BIT NOT NULL DEFAULT 0,
+  PRIMARY KEY (Id)
+);
+
+CREATE INDEX IndexProductSupplierId ON Product (SupplierId ASC);
+CREATE INDEX IndexProductName ON Product (ProductName ASC);
+
+CREATE TABLE Supplier (
+  Id INT ,
+  CompanyName VARCHAR(40) NOT NULL,
+  ContactName VARCHAR(50) NULL,
+  ContactTitle VARCHAR(40) NULL,
+  City VARCHAR(40) NULL,
+  Country VARCHAR(40) NULL,
+  Phone VARCHAR(30) NULL,
+  Fax VARCHAR(30) NULL,
+  PRIMARY KEY (Id)
+);
+
+CREATE INDEX IndexSupplierName ON Supplier (CompanyName ASC);
+CREATE INDEX IndexSupplierCountry ON Supplier (Country ASC);
+
+-- Add foreign key constraints
+ALTER TABLE Orders
+ADD CONSTRAINT FK_ORDER_REFERENCE_CUSTOMER FOREIGN KEY (CustomerId)
+REFERENCES Customer (Id);
+
+ALTER TABLE OrderItem
+ADD CONSTRAINT FK_ORDERITE_REFERENCE_ORDER FOREIGN KEY (OrderId)
+REFERENCES Orders (Id);
+
+ALTER TABLE OrderItem
+ADD CONSTRAINT FK_ORDERITE_REFERENCE_PRODUCT FOREIGN KEY (ProductId)
+REFERENCES Product (Id);
+
+ALTER TABLE Product
+ADD CONSTRAINT FK_PRODUCT_REFERENCE_SUPPLIER FOREIGN KEY (SupplierId)
+REFERENCES Supplier (Id);
