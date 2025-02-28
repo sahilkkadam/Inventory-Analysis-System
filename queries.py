@@ -12,7 +12,7 @@ def highest_revenue_products():
         ORDER BY TotalRevenue Desc
         LIMIT 10;
     '''
-    execute_query(query)
+    execute_query(query, "highest_revenue_products")
 
 def top_customers():
     query = '''
@@ -30,7 +30,7 @@ def top_customers():
         ORDER BY NoOfOrders Desc,
 	    TotalAmountSpent Desc;
     '''
-    execute_query(query)
+    execute_query(query, "top_customers")
 
 def avg_order_value_region():
     query = '''
@@ -46,7 +46,7 @@ def avg_order_value_region():
 	        c.Country
         ORDER BY AverageOrderValue Desc;
     '''
-    execute_query(query)
+    execute_query(query, "avg_order_value_region")
 
 def highest_sales_products():
     query = '''
@@ -59,7 +59,7 @@ def highest_sales_products():
         GROUP BY ProductName
         ORDER BY TotalSales Desc;
     '''
-    execute_query(query)
+    execute_query(query, "highest_sales_products")
 
 def supplier_revenue():
     query = '''
@@ -77,7 +77,7 @@ def supplier_revenue():
 	        p.ProductName
         ORDER BY Revenue Desc;
     '''
-    execute_query(query)
+    execute_query(query, "supplier_revenue")
 
 def discontinued_product_sales():
     query = '''
@@ -91,7 +91,7 @@ def discontinued_product_sales():
         GROUP BY p.ProductName
         ORDER BY Revenue Desc;
     '''
-    execute_query(query)
+    execute_query(query, "discontinued_product_sales")
 
 def products_purchased_together():
     query = '''
@@ -121,4 +121,4 @@ def products_purchased_together():
         WHERE Frequency = (SELECT MAX(Frequency) FROM productbundles)
         ;
     '''
-    execute_query(query)
+    execute_query(query, "products_purchased_together")
